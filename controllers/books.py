@@ -12,13 +12,8 @@ def addbooks(genre):
     }
     response = requests.get(url,headers=headers)
     arr = response.json()
-    print('hi')
     for book in arr:
-        print('hello')
         b = Books(name=book["name"],author=book["author"],available=20,votes=book['votes'])
-        print(b)
-        print('bye')
-    print('bye')
     return arr
 
 def editBookData(data):
