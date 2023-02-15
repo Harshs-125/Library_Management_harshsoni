@@ -1,5 +1,5 @@
 from flask import Blueprint,request,jsonify
-from controllers.books import addbooks,editBookData,borrowBook
+from controllers.books import addbooks,editBookData,borrowBook,returnBookData
 books=Blueprint('books',__name__)
 @books.route('/add',methods=['POST'])
 def add():
@@ -22,4 +22,11 @@ def borrow():
     response=borrowBook(request_data)
     return jsonify({
      "response":response
+    }),200
+@books.route('/return',methods=['POST'])
+def returnBook():
+    request_data=request.json
+    response=returnBookData(request_data)
+    return jsonify({
+        "response":response
     }),200
