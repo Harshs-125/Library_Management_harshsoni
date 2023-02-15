@@ -133,7 +133,7 @@ def getBookByAuthor(author):
                 dict['votes']=b.votes
                 arr.append(dict)
             return jsonify({"response":"Book with this name",
-            "books":arr
+            "books":arr 
             }),200
         return jsonify({"message":"no book with this name"}),404
     except Exception:
