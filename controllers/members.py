@@ -1,5 +1,4 @@
 from flask import Flask,jsonify
-import requests
 from models.members import Members
 from models.transactions import Transactions
 

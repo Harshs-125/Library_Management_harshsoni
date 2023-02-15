@@ -1,7 +1,6 @@
 from flask import Flask,jsonify
-from datetime import date,datetime
-import requests
-from sqlobject import SQLObjectNotFound
+from datetime import date
+from sqlobject import *
 from models.transactions import Transactions
 def viewrecord(transaction_id):
     try:

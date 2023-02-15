@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify
+from flask import Blueprint,request
 from controllers.books import addbooks,editBookData,borrowBook,returnBookData,getPopular
 books=Blueprint('books',__name__)
 @books.route('/add',methods=['POST'])

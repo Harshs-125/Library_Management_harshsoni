@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify
+from flask import Blueprint,request
 from controllers.members import addMember,history,payDebt
 members=Blueprint('members',__name__)
 @members.route('/add',methods=['POST'])
