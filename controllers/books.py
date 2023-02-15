@@ -106,3 +106,35 @@ def getPopular(number):
     except Exception:
         return jsonify({"response":"Internal Server Error"}),500
     
+def getBookByName(name):
+    try:
+        book=Books.selectBy(name=name)
+        if(list(book)!=[]):
+            return jsonify({"response":"Book with this name",
+            "id":book[0].id,
+            "name":book[0].name,
+            "author":book[0].author,
+            "votes":book[0].votes,
+            }),200
+        return jsonify({"message":"no book with this name"}),404
+    except Exception:
+        return jsonify({"message":"Internal Server Error"}),500
+
+def getBookByAuthor(author):
+    try:
+        book=Books.selectBy(author=author)
+        if(list(book)!=[]):
+            arr=[]
+            for b in book:
+                dict={}
+                dict['id']=b.id,
+                dict['name']=b.name,
+                dict['author']=b.author,
+                dict['votes']=b.votes
+                arr.append(dict)
+            return jsonify({"response":"Book with this name",
+            "books":arr
+            }),200
+        return jsonify({"message":"no book with this name"}),404
+    except Exception:
+        return jsonify({"message":Exception}),500
