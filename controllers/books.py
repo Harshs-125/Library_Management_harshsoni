@@ -47,6 +47,7 @@ def borrowBook(data):
         transaction=Transactions(book_id=b_id,member_id=memb_id)
         member.hasbooks=member.hasbooks+1
         book.available=book.available-1
+        book.votes=book.votes+1
         return "book is issued to the member"
     else:
             transaction=Transactions(book_id=b_id,member_id=memb_id)
@@ -79,4 +80,20 @@ def returnBookData(data):
             member.debt=member.debt + (amount_to_paid-amount_paid)
         return "successfully record the returned data "
     return "no such transaction found"
+
+def getPopular(number):
+    books=Books.select()
+    books=list(books)
+    books.sort(key=lambda x:x.votes,reverse=True)
+    popular=[]
+    for i in range (0,number):
+        dict={}
+        dict['id']=books[i].id
+        dict['name']=books[i].name
+        dict['author']=books[i].author
+        dict['votes']=books[i].votes
+        popular.append(dict)
+
+
+    return f"top {number} popular books are : {popular}"
     
