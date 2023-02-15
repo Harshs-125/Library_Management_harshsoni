@@ -60,26 +60,23 @@ def returnBookData(data):
     if(list(transaction)!=[]):
         member=Members.selectBy(id=transaction[0].member_id)[0]
         book=Books.selectBy(id=transaction[0].book_id)[0]
-        member=Members.get_dict(member)
-        book=Books.get_dict(book)
         amount_paid=data['amount_paid']
-        transaction=Transactions.get_dict(transaction[0])
-        issued_date=transaction['issue_date']
+        issued_date=transaction[0].issue_date
         current_date=date.today()
         delta = current_date-issued_date
         days=delta.days
-        amount_to_pay=100
+        amount_to_paid=transaction[0].amount_to_paid
         if(days>15):
             fine=((current_date-issued_date)-15)*10
-            amount_to_pay=amount_to_pay+fine
-        transaction['return_date']=current_date
-        transaction['amount_to_paid']=amount_to_pay
-        transaction['amount_paid']=amount_paid
-        transaction['status']="returned"
-        member['hasbooks']=member['hasbooks']-1
-        book['available']=book['available']+1
-        if(amount_to_pay-amount_paid>0):
-            member['debt']=member['debt'] + (amount_to_pay-amount_paid)
+            amount_to_paid=amount_to_paid+fine
+        transaction[0].return_date=current_date
+        transaction[0].amount_to_paid=amount_to_paid
+        transaction[0].amount_paid=amount_paid
+        transaction[0].status="returned"
+        member.hasbooks=member.hasbooks-1
+        book.available=book.available+1 
+        if(amount_to_paid-amount_paid>0):
+            member.debt=member.debt + (amount_to_paid-amount_paid)
         return "successfully record the returned data "
     return "no such transaction found"
     

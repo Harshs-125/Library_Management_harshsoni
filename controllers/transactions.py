@@ -8,7 +8,7 @@ def viewrecord(data):
         transaction=Transactions.select(Transactions.q.id == id)
         
         if(list(transaction) != []):
-            issued_date=transaction.issue_date
+            issued_date=transaction[0].issue_date
             current_date=date.today()
             delta = current_date-issued_date
             days=delta.days
@@ -16,7 +16,7 @@ def viewrecord(data):
             if(days>15):
                 fine=((current_date-issued_date)-15)*10
                 amount_to_pay=amount_to_pay+fine
-            return f"transaction {transaction.id} {transaction.book_id} {transaction.member_id} amount to pay : {amount_to_pay}"
+            return f"transaction {transaction[0].id} {transaction[0].book_id} {transaction[0].member_id} amount to pay : {amount_to_pay}"
         
         return "no record found"
     
