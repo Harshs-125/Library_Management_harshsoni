@@ -21,3 +21,10 @@ def history(id):
             arr.append(Transactions.get_dict(transaction))
         return {'transactions':arr,'debt':member[0].debt,'total_books':member[0].hasbooks}
     return "no member with this id "
+
+def payDebt(id,amount):
+    member=Members.selectBy(id=id)
+    if(list(member)!=[]):
+        member[0].debt=member[0].debt-amount
+        return "successfully register the amount"
+    return "no memeber with this id"
