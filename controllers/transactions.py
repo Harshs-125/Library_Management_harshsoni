@@ -1,12 +1,12 @@
-from flask import Flask
+from flask import Flask,jsonify
 from datetime import date,datetime
 import requests
 from sqlobject import SQLObjectNotFound
 from models.transactions import Transactions
 def viewrecord(data):
+    try:
         id = data["id"]
         transaction=Transactions.select(Transactions.q.id == id)
-        
         if(list(transaction) != []):
             issued_date=transaction[0].issue_date
             current_date=date.today()
@@ -16,9 +16,15 @@ def viewrecord(data):
             if(days>15):
                 fine=((current_date-issued_date)-15)*10
                 amount_to_pay=amount_to_pay+fine
-            return f"transaction {transaction[0].id} {transaction[0].book_id} {transaction[0].member_id} amount to pay : {amount_to_pay}"
-        
-        return "no record found"
+            return jsonify({
+            "response":"the record of this id",
+            "transaction-id":transaction[0].id,
+            "member_id":transaction[0].member_id,
+            "book-id":transaction[0].book_id,
+            "amount-to-pay":amount_to_pay}),200
+        return jsonify({"response":"No record found"}),404
+    except Exception:
+        return jsonify({"response":"Internal Server Error"}),500
     
     
 

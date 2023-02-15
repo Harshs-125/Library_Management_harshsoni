@@ -8,6 +8,4 @@ transaction=Blueprint('transaction',__name__)
 def view():
     request_data=request.json
     response=viewrecord(request_data)
-    return jsonify({
-        "response":response
-    }),200
+    return response

@@ -5,35 +5,26 @@ books=Blueprint('books',__name__)
 def add():
     request_data=request.json
     response=addbooks(request_data['genre'])
-    print("response")
-    return jsonify({"response":response}),200
+    return response
 
 @books.route('/edit-book-data',methods=['PATCH'])
 def edit():
     request_data=request.json
     response=editBookData(request_data)
-    return jsonify({
-        "response":response
-    }),200
+    return response
 
 @books.route('/borrow',methods=['POST'])
 def borrow():
     request_data=request.json
     response=borrowBook(request_data)
-    return jsonify({
-     "response":response
-    }),200
+    return response
 @books.route('/return',methods=['POST'])
 def returnBook():
     request_data=request.json
     response=returnBookData(request_data)
-    return jsonify({
-        "response":response
-    }),200
+    return response
 
 @books.route('/popular/<int:number>',methods=['GET'])
 def popularBook(number):
     response=getPopular(number)
-    return jsonify({
-        "response":response
-    }),200
+    return response
