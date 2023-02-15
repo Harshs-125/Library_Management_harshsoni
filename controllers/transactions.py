@@ -3,10 +3,9 @@ from datetime import date,datetime
 import requests
 from sqlobject import SQLObjectNotFound
 from models.transactions import Transactions
-def viewrecord(data):
+def viewrecord(transaction_id):
     try:
-        id = data["id"]
-        transaction=Transactions.select(Transactions.q.id == id)
+        transaction=Transactions.select(Transactions.q.id == transaction_id)
         if(list(transaction) != []):
             issued_date=transaction[0].issue_date
             current_date=date.today()

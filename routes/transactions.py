@@ -4,8 +4,7 @@ from controllers.transactions import viewrecord
 transaction=Blueprint('transaction',__name__)
 
 
-@transaction.route('/viewrecord',methods=['POST'])
-def view():
-    request_data=request.json
-    response=viewrecord(request_data)
+@transaction.route('/viewrecord/<int:transaction_id>',methods=['GET'])
+def view(transaction_id):
+    response=viewrecord(transaction_id)
     return response

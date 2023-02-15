@@ -7,14 +7,13 @@ def add():
     response=addMember(request_data['name'],request_data['email'])
     return response
 
-@members.route('/history',methods=['POST'])
-def view():
-    request_data=request.json
-    response=history(request_data['member_id'])
+@members.route('/history/<int:member_id>',methods=['GET'])
+def view(member_id):
+    response=history(member_id)
     return response
 
-@members.route('/paydebt/<int:id>',methods=['POST'])
-def paydebt(id):
+@members.route('/paydebt/<int:member_id>',methods=['POST'])
+def paydebt(member_id):
     request_data=request.json
-    response=payDebt(id,request_data['amount'])
+    response=payDebt(member_id,request_data['amount'])
     return response

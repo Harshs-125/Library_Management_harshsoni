@@ -7,21 +7,21 @@ def add():
     response=addbooks(request_data['genre'])
     return response
 
-@books.route('/edit-book-data',methods=['PATCH'])
-def edit():
+@books.route('/edit-book-data/<int:id>',methods=['PATCH'])
+def edit(id):
     request_data=request.json
-    response=editBookData(request_data)
+    response=editBookData(id,request_data)
     return response
 
-@books.route('/borrow',methods=['POST'])
-def borrow():
+@books.route('/borrow/<int:id>',methods=['POST'])
+def borrow(id):
     request_data=request.json
-    response=borrowBook(request_data)
+    response=borrowBook(id,request_data)
     return response
-@books.route('/return',methods=['POST'])
-def returnBook():
-    request_data=request.json
-    response=returnBookData(request_data)
+@books.route('/return/<int:transaction_id>',methods=['POST'])
+def returnBook(transaction_id):
+    amount_paid=request.json['amount_paid']
+    response=returnBookData(transaction_id,amount_paid)
     return response
 
 @books.route('/popular/<int:number>',methods=['GET'])

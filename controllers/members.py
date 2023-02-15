@@ -7,7 +7,7 @@ def addMember(name,e):
     try:
         mem=Members.select(Members.q.email==e)
         if(mem.count()>0):
-            return jsonify({"response":"member already exits"}),409
+            return jsonify({"response":"member with this email id already exits"}),409
         member=Members(name=name,email=e)
         return jsonify({"response":"member created successfully"}),200
     except Exception:

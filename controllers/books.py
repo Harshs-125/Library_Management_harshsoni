@@ -1,5 +1,5 @@
 from flask import Flask,jsonify
-from datetime import datetime,date
+from datetime import date
 import requests
 from constants import BOOK_API_URL
 from models.books import Books
@@ -21,11 +21,10 @@ def addbooks(genre):
     except Exception:
         return jsonify({"response":"Internal Server Error"}),500
 
-def editBookData(data):
+def editBookData(id,data):
     try:
-        book_id=data["book_id"]
-        book=Books.get(id=book_id)
-        if(book): 
+        book=Books.selectBy(id=id)
+        if(list(book)!=[]): 
             if(data['key']=="name"):
                 book.name=data['value']
             elif(data['key']=="author"):
@@ -38,40 +37,37 @@ def editBookData(data):
     except Exception:
         return jsonify({"response":"Internal Server Error"}),500
 
-def borrowBook(data):
+def borrowBook(book_id,data):
     try:
         memb_id=data['member_id']
-        b_id=data['book_id']
         member=Members.selectBy(id=memb_id)[0]
-        book=Books.selectBy(id=b_id)[0]
-        transaction=Transactions.selectBy(member_id=memb_id,book_id=b_id)
+        book=Books.selectBy(id=book_id)[0]  
+        transaction=Transactions.selectBy(member_id=memb_id,book_id=book_id)
         if(list(transaction)!=[]):
-            repeat_transaction=Transactions.selectBy(member_id=memb_id,book_id=b_id,status="issued")
+            repeat_transaction=Transactions.selectBy(member_id=memb_id,book_id=book_id,status="issued")
             if(list(repeat_transaction)!=[]):
                 return jsonify({"response":"this book is already issued to this member cannot reissue the same book"}),200
             if(member.debt>=500):
                 return jsonify({"response":"cannot issue the book since members dept is exceeding the limit first clear the debt"}),200
-            transaction=Transactions(book_id=b_id,member_id=memb_id)
+            transaction=Transactions(book_id=book_id,member_id=memb_id)
             member.hasbooks=member.hasbooks+1
             book.available=book.available-1
             book.votes=book.votes+1
             return jsonify({"response":"Book successfully issued"}),200
         else:
-                transaction=Transactions(book_id=b_id,member_id=memb_id)
+                transaction=Transactions(book_id=book_id,member_id=memb_id)
                 member.hasbooks=member.hasbooks+1
                 book.available=book.available-1
                 return jsonify({"response":"Books successfully issued"}),200
     except Exception:
         return jsonify({"response":"Internal Server Error"}),500
         
-def returnBookData(data):
+def returnBookData(transaction_id,amount_paid):
     try:
-        transation_id=data['id']
-        transaction=Transactions.selectBy(id=transation_id)
+        transaction=Transactions.selectBy(id=transaction_id)
         if(list(transaction)!=[]):
             member=Members.selectBy(id=transaction[0].member_id)[0]
             book=Books.selectBy(id=transaction[0].book_id)[0]
-            amount_paid=data['amount_paid']
             issued_date=transaction[0].issue_date
             current_date=date.today()
             delta = current_date-issued_date
