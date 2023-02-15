@@ -3,6 +3,8 @@ from datetime import datetime,date
 import requests
 from constants import BOOK_API_URL
 from models.books import Books
+from models.members import Members
+from models.transactions import Transactions
 
 def addbooks(genre):
     url = f"{BOOK_API_URL}{genre}/2020"
@@ -29,3 +31,20 @@ def editBookData(data):
         return "book details is edited"
     else:
         return "no book with the given id "
+def borrowBook(data):
+    memb_id=data['member_id']
+    b_id=data['book_id']
+    member=Members.selectBy(id=memb_id)[0]
+    book=Books.selectBy(id=b_id)[0]
+    transaction=Transactions.selectBy(member_id=memb_id,book_id=b_id)
+
+    if(list(transaction)==[]):
+        if(member.debt>=500):
+            return "cannot issue the book since members dept is exceeding the limit"
+        transaction=Transactions(book_id=b_id,member_id=memb_id)
+        member.hasbooks=member.hasbooks+1
+        book.available=book.available-1
+        return "book is issued to the member"
+    elif(transaction[0].status=="issued"):
+            return "this book is already issued to this member cannot reissue the same book "
+    
