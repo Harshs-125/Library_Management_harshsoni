@@ -38,15 +38,21 @@ def borrowBook(data):
     book=Books.selectBy(id=b_id)[0]
     transaction=Transactions.selectBy(member_id=memb_id,book_id=b_id)
 
-    if(list(transaction)==[]):
+    if(list(transaction)!=[]):
+        repeat_transaction=Transactions.selectBy(member_id=memb_id,book_id=b_id,status="issued")
+        if(list(repeat_transaction)!=[]):
+            return "this book is already issued to this member cannot reissue the same book"
         if(member.debt>=500):
             return "cannot issue the book since members dept is exceeding the limit"
         transaction=Transactions(book_id=b_id,member_id=memb_id)
         member.hasbooks=member.hasbooks+1
         book.available=book.available-1
         return "book is issued to the member"
-    elif(transaction[0].status=="issued"):
-            return "this book is already issued to this member cannot reissue the same book "
+    else:
+            transaction=Transactions(book_id=b_id,member_id=memb_id)
+            member.hasbooks=member.hasbooks+1
+            book.available=book.available-1
+            return "book is issued to the member"
 
 def returnBookData(data):
     transation_id=data['id']
