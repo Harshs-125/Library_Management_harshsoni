@@ -18,8 +18,9 @@ def addbooks(genre):
         for book in arr:
             b = Books(name=book["name"],author=book["author"],available=20,votes=book['votes'])
         return jsonify({"response":"following books have been added","books":arr}),200
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
 
 def editBookData(id,data):
     try:
@@ -34,8 +35,9 @@ def editBookData(id,data):
             return jsonify({"response":"book details successfully edited"}),200
         else:
             return jsonify({"response":"No book found with this id"}),404
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
 
 def borrowBook(book_id,data):
     try:
@@ -51,6 +53,7 @@ def borrowBook(book_id,data):
                 return jsonify({"response":"cannot issue the book since members dept is exceeding the limit first clear the debt"}),200
             transaction=Transactions(book_id=book_id,member_id=memb_id)
             member.hasbooks=member.hasbooks+1
+            member.totalbooksissued=member.totalbooksissued+1
             book.available=book.available-1
             book.votes=book.votes+1
             return jsonify({"response":"Book successfully issued"}),200
@@ -59,8 +62,9 @@ def borrowBook(book_id,data):
                 member.hasbooks=member.hasbooks+1
                 book.available=book.available-1
                 return jsonify({"response":"Books successfully issued"}),200
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
         
 def returnBookData(transaction_id,amount_paid):
     try:
@@ -86,8 +90,9 @@ def returnBookData(transaction_id,amount_paid):
                 member.debt=member.debt + (amount_to_paid-amount_paid)
             return jsonify({"response":"successfully recorded the returned data"}),200
         return jsonify({"response":"no such transaction found"})
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
 
 def getPopular(number):
     try:
@@ -103,8 +108,9 @@ def getPopular(number):
             dict['votes']=books[i].votes
             popular.append(dict)
         return jsonify({"response":f"the top {number} popular books","books":popular}),200
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
     
 def getBookByName(name):
     try:
@@ -117,8 +123,9 @@ def getBookByName(name):
             "votes":book[0].votes,
             }),200
         return jsonify({"message":"no book with this name"}),404
-    except Exception:
-        return jsonify({"message":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
 
 def getBookByAuthor(author):
     try:
@@ -136,5 +143,6 @@ def getBookByAuthor(author):
             "books":arr 
             }),200
         return jsonify({"message":"no book with this name"}),404
-    except Exception:
-        return jsonify({"message":Exception}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400

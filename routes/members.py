@@ -1,5 +1,5 @@
 from flask import Blueprint,request
-from controllers.members import addMember,history,payDebt
+from controllers.members import addMember,history,payDebt,highestPayingCustomer
 members=Blueprint('members',__name__)
 @members.route('/add',methods=['POST'])
 def add():
@@ -16,4 +16,9 @@ def view(member_id):
 def paydebt(member_id):
     request_data=request.json
     response=payDebt(member_id,request_data['amount'])
+    return response
+
+@members.route('/highestpayingcustomer/<int:number>',methods=['GET'])
+def highestpaying(number):
+    response=highestPayingCustomer(number)
     return response

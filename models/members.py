@@ -8,6 +8,7 @@ class Members(SQLObject):
     email=StringCol(notNone=False,unique=True)
     hasbooks=IntCol(default=0)
     debt=IntCol(default=0)
+    totalbookissued=IntCol(default=0)
 
     def get_dict(self):
-        return {'id':self.id,'name':self.name,'email':self.email,'hasbooks':self.hasbooks,'debt':self.debt}
+        return {'id':self.id,'name':self.name,'email':self.email,'hasbooks':self.hasbooks,'debt':self.debt,'totalbookissued':self.totalbookissued}

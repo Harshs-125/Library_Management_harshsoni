@@ -21,8 +21,9 @@ def viewrecord(transaction_id):
             "book-id":transaction[0].book_id,
             "amount-to-pay":amount_to_pay}),200
         return jsonify({"response":"No record found"}),404
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
     
     
 

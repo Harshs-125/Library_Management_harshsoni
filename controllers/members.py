@@ -9,8 +9,9 @@ def addMember(name,e):
             return jsonify({"response":"member with this email id already exits"}),409
         member=Members(name=name,email=e)
         return jsonify({"response":"member created successfully"}),200
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+       return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
 
 def history(id):
     try:
@@ -29,8 +30,9 @@ def history(id):
             "transactions":arr
             }),200
         return jsonify({"response":"member not found with this id"}),404
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
 
 def payDebt(id,amount):
     try:
@@ -39,5 +41,25 @@ def payDebt(id,amount):
             member[0].debt=member[0].debt-amount
             return jsonify({"response":"amount registered"}),200
         return jsonify({"response":"member not found with this id"}),404
-    except Exception:
-        return jsonify({"response":"Internal Server Error"}),500
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
+
+def highestPayingCustomer(number):
+    try:
+        members=Members.select()
+        members=list(members)
+        members.sort(key=lambda x:x.totalbookissued,reverse=True)
+        print(members)
+        customers=[]
+        for i in range (0,number):
+            dict={}
+            dict['id']=members[i].id
+            dict['name']=members[i].name
+            dict['author']=members[i].email
+            dict['votes']=members[i].totalbookissued
+            customers.append(dict)
+        return jsonify({"response":f"the top {number} paying customers","customers":customers}),200
+    except Exception as err:
+        return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
