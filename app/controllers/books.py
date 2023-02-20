@@ -53,7 +53,7 @@ def borrowBook(book_id,data):
                 return jsonify({"response":"cannot issue the book since members dept is exceeding the limit first clear the debt"}),200
             transaction=Transactions(book_id=book_id,member_id=memb_id)
             member.hasbooks=member.hasbooks+1
-            member.totalbooksissued=member.totalbooksissued+1
+            member.totalbookissued=member.totalbookissued+1
             book.available=book.available-1
             book.votes=book.votes+1
             return jsonify({"response":"Book successfully issued"}),200
@@ -70,6 +70,8 @@ def returnBookData(transaction_id,amount_paid):
     try:
         transaction=Transactions.selectBy(id=transaction_id)
         if(list(transaction)!=[]):
+            if(transaction[0].status=="returned"):
+                return jsonify({"response":"This returned transaction is already done not a valid transaction id"}),200
             member=Members.selectBy(id=transaction[0].member_id)[0]
             book=Books.selectBy(id=transaction[0].book_id)[0]
             issued_date=transaction[0].issue_date
@@ -84,7 +86,6 @@ def returnBookData(transaction_id,amount_paid):
             transaction[0].amount_to_paid=amount_to_paid
             transaction[0].amount_paid=amount_paid
             transaction[0].status="returned"
-            member.hasbooks=member.hasbooks-1
             book.available=book.available+1 
             if(amount_to_paid-amount_paid>0):
                 member.debt=member.debt + (amount_to_paid-amount_paid)
