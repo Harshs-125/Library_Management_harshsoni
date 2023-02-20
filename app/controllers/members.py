@@ -1,6 +1,6 @@
 from flask import Flask,jsonify
-from models.members import Members
-from models.transactions import Transactions
+from ..models.members import Members
+from ..models.transactions import Transactions
 
 def addMember(name,e):
     try:
@@ -57,7 +57,7 @@ def highestPayingCustomer(number):
             dict['id']=members[i].id
             dict['name']=members[i].name
             dict['author']=members[i].email
-            dict['votes']=members[i].totalbookissued
+            dict['totalbookissued']=members[i].totalbookissued
             customers.append(dict)
         return jsonify({"response":f"the top {number} paying customers","customers":customers}),200
     except Exception as err:

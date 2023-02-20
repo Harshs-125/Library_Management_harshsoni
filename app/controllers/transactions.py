@@ -1,7 +1,7 @@
 from flask import Flask,jsonify
 from datetime import date
 from sqlobject import *
-from models.transactions import Transactions
+from ..models.transactions import Transactions
 def viewrecord(transaction_id):
     try:
         transaction=Transactions.select(Transactions.q.id == transaction_id)

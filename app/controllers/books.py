@@ -1,10 +1,10 @@
 from flask import Flask,jsonify
 from datetime import date
 import requests
-from constants import BOOK_API_URL
-from models.books import Books
-from models.members import Members
-from models.transactions import Transactions
+from ..constants import BOOK_API_URL
+from ..models.books import Books
+from ..models.members import Members
+from ..models.transactions import Transactions
 
 def addbooks(genre):
     try:

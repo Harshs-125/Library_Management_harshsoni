@@ -1,16 +1,16 @@
 from flask import Flask
 import os
-from constants import SQL_DATABASE_URL
+from .constants import SQL_DATABASE_URL
 from sqlobject import *
-from routes.index import root
-from routes.books import books
-from routes.members import members
-from routes.transactions import transaction
-from models.books import Books
-from models.members import Members
-from models.transactions import Transactions
-from constants import SQL_DATABASE_URL
-def app_init():
+from .routes.index import root
+from .routes.books import books
+from .routes.members import members
+from .routes.transactions import transaction
+from .models.books import Books
+from .models.members import Members
+from .models.transactions import Transactions
+
+def create_app():
 
     app=Flask(__name__)
     db_filename = os.path.abspath('library.sqlite')

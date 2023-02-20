@@ -1,5 +1,5 @@
 from flask import Blueprint,request
-from controllers.members import addMember,history,payDebt,highestPayingCustomer
+from ..controllers.members import addMember,history,payDebt,highestPayingCustomer
 members=Blueprint('members',__name__)
 @members.route('/add',methods=['POST'])
 def add():

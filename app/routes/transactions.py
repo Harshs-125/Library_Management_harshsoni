@@ -1,5 +1,5 @@
 from flask import Blueprint,request
-from controllers.transactions import viewrecord
+from ..controllers.transactions import viewrecord
 
 transaction=Blueprint('transaction',__name__)
 
