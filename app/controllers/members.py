@@ -1,4 +1,5 @@
 from flask import Flask,jsonify
+from sqlobject import *
 from ..models.members import Members
 from ..models.transactions import Transactions
 
@@ -63,3 +64,16 @@ def highestPayingCustomer(number):
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
+
+def deleteMember(member_id):
+    try:
+        member=Members.get(member_id)
+    except SQLObjectNotFound:
+        return jsonify({"response":"object not found with this data"}),404
+    except Exception as err:
+       return jsonify({"response":"Something went wrong",
+        "error":str(err)}),400
+    else:
+        member.delete(member_id)
+        return jsonify({"response":"successfully deleted the member"}),200
+         
