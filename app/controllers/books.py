@@ -1,4 +1,5 @@
 from flask import Flask,jsonify
+from sqlobject import *
 from datetime import date
 import requests
 from ..constants import BOOK_API_URL
@@ -24,20 +25,20 @@ def addbooks(genre):
 
 def editBookData(id,data):
     try:
-        book=Books.selectBy(id=id)
-        if(list(book)!=[]): 
-            if(data['key']=="name"):
-                book.name=data['value']
-            elif(data['key']=="author"):
-                book.author=data['value']
-            elif(data['key']=="available"):
-                book.available=data['value']
-            return jsonify({"response":"book details successfully edited"}),200
-        else:
-            return jsonify({"response":"No book found with this id"}),404
+        book=Books.get(id)
+    except SQLObjectNotFound:
+        return jsonify({"response":"data not found"}),404
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
+    else:
+        if(data['key']=="name"):
+            book.name=data['value']
+        elif(data['key']=="author"):
+            book.author=data['value']
+        elif(data['key']=="available"):
+            book.available=data['value']
+        return jsonify({"response":"book details successfully edited"}),200
 
 def borrowBook(book_id,data):
     try:
