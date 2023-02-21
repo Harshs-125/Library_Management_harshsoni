@@ -38,7 +38,14 @@ def editBookData(id,data):
             book.author=data['value']
         elif(data['key']=="available"):
             book.available=data['value']
-        return jsonify({"response":"book details successfully edited"}),200
+        return jsonify({"response":"book details successfully edited",
+        "book":{
+            "id":book.id,
+            "name":book.name,
+            "author":book.author,
+            "available":book.available,
+            "votes":book.votes
+        }}),200
 
 def borrowBook(book_id,data):
     try:

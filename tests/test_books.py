@@ -34,8 +34,11 @@ def test_edit_book(client):
     }
     res1=client.patch(f'/book/edit-book-data/{demoBook_id}',json=data1)
     assert res1.status_code==200
+    assert res1.json['book']!={}
     res2=client.patch(f'/book/edit-book-data/{demoBook_id}',json=data2)
     assert res2.status_code==200
+    assert res2.json['book']!={}
     demoBook.delete(demoBook_id)
     res3=client.patch(f'/book/edit-book-data/{demoBook_id}',json=data1)
     assert res3.status_code==404
+    assert res3.json['response']=="data not found"
