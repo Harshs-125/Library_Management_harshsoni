@@ -81,6 +81,9 @@ def test_borrow_book_and_return(client):
     assert res3.status_code==400
     assert res3.json['response']=="cannot issue"
     assert res3.json['message']=="clear your debt"
+    Members.delete(demomember_id)
+    Books.delete(demobook_id)
+
     
     res4=client.post(f'/book/borrow/{0}',json={"member_id":0})
     assert res4.status_code==404

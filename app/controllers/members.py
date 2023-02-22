@@ -24,8 +24,6 @@ def history(id):
         "error":str(err)}),400
     else:
         transactions=Transactions.selectBy(member_id=id)
-        if(list(transactions)==[]):
-            return jsonify({"response":"no transactions of this member"}),404
         arr=[]
         for transaction in transactions:
             arr.append(Transactions.get_dict(transaction))
@@ -38,14 +36,15 @@ def history(id):
 
 def payDebt(id,amount):
     try:
-        member=Members.selectBy(id=id)
-        if(list(member)!=[]):
-            member[0].debt=member[0].debt-amount
-            return jsonify({"response":"amount registered"}),200
-        return jsonify({"response":"member not found with this id"}),404
+        member=Members.get(id)
+    except SQLObjectNotFound:
+        return jsonify({"response":"data not found"}),404
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
+    else:    
+        member.debt=member.debt-amount
+        return jsonify({"response":"amount registered","amount_paid":amount,"debt-left":member.debt}),200
 
 def highestPayingCustomer(number):
     try:
@@ -54,14 +53,16 @@ def highestPayingCustomer(number):
         members.sort(key=lambda x:x.totalbookissued,reverse=True)
         print(members)
         customers=[]
-        for i in range (0,number):
+        num=[number,len(members)]
+        n=min(num)
+        for i in range (0,n):
             dict={}
             dict['id']=members[i].id
             dict['name']=members[i].name
             dict['author']=members[i].email
             dict['totalbookissued']=members[i].totalbookissued
             customers.append(dict)
-        return jsonify({"response":f"the top {number} paying customers","customers":customers}),200
+        return jsonify({"response":f"the top {n} paying customers","customers":customers}),200
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
