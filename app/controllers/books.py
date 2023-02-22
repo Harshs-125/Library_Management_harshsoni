@@ -50,8 +50,13 @@ def editBookData(id,data):
 def borrowBook(book_id,data):
     try:
         memb_id=data['member_id']
-        member=Members.selectBy(id=memb_id)[0]
-        book=Books.selectBy(id=book_id)[0]  
+        member=Members.get(memb_id)
+        book=Books.get(book_id)
+    except SQLObjectNotFound:
+        return jsonify({"response":"member or book data not found"}),404
+    except Exception as err:
+        return jsonify({"response":"something is wrong"}),400
+    else:
         transaction=Transactions.selectBy(member_id=memb_id,book_id=book_id)
         if(list(transaction)!=[]):
             repeat_transaction=Transactions.selectBy(member_id=memb_id,book_id=book_id,status="issued")
@@ -64,44 +69,54 @@ def borrowBook(book_id,data):
             member.totalbookissued=member.totalbookissued+1
             book.available=book.available-1
             book.votes=book.votes+1
-            return jsonify({"response":"Book successfully issued"}),200
+            return jsonify({"response":"Book successfully issued",
+            "transaction-id":transaction.id,
+            "member-id":member.id,
+            "book-id":book.id}),200
         else:
                 transaction=Transactions(book_id=book_id,member_id=memb_id)
                 member.hasbooks=member.hasbooks+1
                 book.available=book.available-1
-                return jsonify({"response":"Books successfully issued"}),200
-    except Exception as err:
-        return jsonify({"response":"Something went wrong",
-        "error":str(err)}),400
+                return jsonify({"response":"Book successfully issued",
+                "transaction-id":transaction.id,
+                "member-id":member.id,
+                "book-id":book.id}),200
         
 def returnBookData(transaction_id,amount_paid):
     try:
-        transaction=Transactions.selectBy(id=transaction_id)
-        if(list(transaction)!=[]):
-            if(transaction[0].status=="returned"):
-                return jsonify({"response":"This returned transaction is already done not a valid transaction id"}),200
-            member=Members.selectBy(id=transaction[0].member_id)[0]
-            book=Books.selectBy(id=transaction[0].book_id)[0]
-            issued_date=transaction[0].issue_date
-            current_date=date.today()
-            delta = current_date-issued_date
-            days=delta.days
-            amount_to_paid=transaction[0].amount_to_paid
-            if(days>15):
-                fine=((current_date-issued_date)-15)*10
-                amount_to_paid=amount_to_paid+fine
-            transaction[0].return_date=current_date
-            transaction[0].amount_to_paid=amount_to_paid
-            transaction[0].amount_paid=amount_paid
-            transaction[0].status="returned"
-            book.available=book.available+1 
-            if(amount_to_paid-amount_paid>0):
-                member.debt=member.debt + (amount_to_paid-amount_paid)
-            return jsonify({"response":"successfully recorded the returned data"}),200
-        return jsonify({"response":"no such transaction found"})
+        transaction=Transactions.get(transaction_id)
+        member=Members.get(transaction.member_id)
+        book=Books.get(transaction.book_id)
+    except SQLObjectNotFound:
+        return jsonify({"response":"data not found"}),404
     except Exception as err:
-        return jsonify({"response":"Something went wrong",
-        "error":str(err)}),400
+        return jsonify({"response":"something is wrong"}),400
+    else:
+        if(transaction.status=="returned"):
+            return jsonify({"response":"book is already returned",
+            }),200
+        issued_date=transaction.issue_date
+        current_date=date.today()
+        delta = current_date-issued_date
+        days=delta.days
+        amount_to_paid=transaction.amount_to_paid
+        if(days>15):
+            fine=((current_date-issued_date)-15)*10
+            amount_to_paid=amount_to_paid+fine
+        transaction.return_date=current_date
+        transaction.amount_to_paid=amount_to_paid
+        transaction.amount_paid=amount_paid
+        transaction.status="returned"
+        book.available=book.available+1 
+        if(amount_to_paid-amount_paid>0):
+            member.debt=member.debt + (amount_to_paid-amount_paid)
+        return jsonify({"response":"Success",
+        "transaction_id":transaction.id,
+        "book_id":transaction.book_id,
+        "member_id":transaction.member_id,
+        "amount_to_paid":transaction.amount_to_paid,
+        "amount_paid":transaction.amount_paid,
+        }),200
 
 def getPopular(number):
     try:

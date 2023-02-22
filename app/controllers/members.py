@@ -9,7 +9,7 @@ def addMember(name,e):
         if(mem.count()>0):
             return jsonify({"response":"member with this email id already exits"}),409
         member=Members(name=name,email=e)
-        return jsonify({"response":"member created successfully"}),200
+        return jsonify({"response":"member created successfully","member-id":member.id,"member-name":member.name,"member-email":member.email}),200
     except Exception as err:
        return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
