@@ -58,20 +58,34 @@ def test_borrow_book_and_return(client):
     assert res1.json['book-id']==demobook_id
     assert res1.json['transaction-id']!=None
     res2=client.post(f'/book/borrow/{demobook_id}',json={"member_id":demomember_id})
-    assert res2.status_code==200
-    assert res2.json['response']=="this book is already issued to this member cannot reissue the same book"
-    res2=client.post(f'/book/borrow/{0}',json={"member_id":0})
-    assert res2.status_code==404
-    assert res2.json['response']=="member or book data not found"
+    assert res2.status_code==400
+    assert res2.json['response']=="cannot issue"
+    assert res2.json['message']=="cannot reissued the same book"
     amountpaid=100
-    res3=client.post(f'/book/return/{transaction_id}',json={"amount_paid":amountpaid})
-    assert res3.status_code==200
-    assert res3.json['response']=="Success"
-    assert res3.json['book_id']==demobook_id
-    assert res3.json['member_id']==demomember_id
-    assert res3.json['amount_to_paid']==transaction.amount_to_paid
-    assert res3.json['amount_paid']==transaction.amount_paid
+    res5=client.post(f'/book/return/{transaction_id}',json={"amount_paid":amountpaid})
+    assert res5.status_code==200
+    assert res5.json['response']=="Success"
+    assert res5.json['book_id']==demobook_id
+    assert res5.json['member_id']==demomember_id
+    assert res5.json['amount_to_paid']==transaction.amount_to_paid
+    assert res5.json['amount_paid']==transaction.amount_paid
     Transactions.delete(transaction_id)
     Members.delete(demomember_id)
     Books.delete(demobook_id)
+    demoBook=Books(name="demobook",author="demoauthor",available=20,votes=20)
+    demomember=Members(name="demomember",email="demoemail@123")
+    demobook_id=demoBook.id
+    demomember_id=demomember.id
+    demomember.debt=600
+    res3=client.post(f'/book/borrow/{demobook_id}',json={"member_id":demomember_id})
+    assert res3.status_code==400
+    assert res3.json['response']=="cannot issue"
+    assert res3.json['message']=="clear your debt"
+    
+    res4=client.post(f'/book/borrow/{0}',json={"member_id":0})
+    assert res4.status_code==404
+    assert res4.json['response']=="member or book data not found"
+    
+    
+    
 

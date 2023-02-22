@@ -23,7 +23,16 @@ def test_delete_member(client):
     res2=client.delete('/member/delete')
     assert res2.status_code==404
 
-
+def test_member_transaction_history(client):
+    demomember=Members(name="demo",email="demo@123")
+    member_id=demomember.id
+    res1=client.get(f'/member/history/18')
+    assert res1.status_code==200
+    assert res1.json['name']=="Harsh Soni"
+    assert res1.json['transactions']!=None
+    Members.delete(member_id)
+    res2=client.get(f'/member/history/{member_id}')
+    assert res2.status_code==404
 
 
 

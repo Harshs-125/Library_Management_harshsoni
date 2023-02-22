@@ -16,24 +16,25 @@ def addMember(name,e):
 
 def history(id):
     try:
-        member=Members.selectBy(id=id)
-        arr=[]
-        if(list(member)!=[]):
-            transactions=Transactions.selectBy(member_id=id)
-            if(list(transactions)==[]):
-                return jsonify({"response":"no transactions of this member"}),404
-            for transaction in transactions:
-                arr.append(Transactions.get_dict(transaction))
-            return jsonify({"response":"success fully fetched data",
-            "name":member[0].name,
-            "debt":member[0].debt,
-            "totalbooks":member[0].hasbooks,
-            "transactions":arr
-            }),200
-        return jsonify({"response":"member not found with this id"}),404
+        member=Members.get(id=id)
+    except SQLObjectNotFound:
+        return jsonify({"response":"data not found"}),404
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
+    else:
+        transactions=Transactions.selectBy(member_id=id)
+        if(list(transactions)==[]):
+            return jsonify({"response":"no transactions of this member"}),404
+        arr=[]
+        for transaction in transactions:
+            arr.append(Transactions.get_dict(transaction))
+        return jsonify({"response":"success fully fetched data",
+        "name":member.name,
+        "debt":member.debt,
+        "totalbooks":member.hasbooks,
+        "transactions":arr
+        }),200
 
 def payDebt(id,amount):
     try:

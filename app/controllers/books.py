@@ -57,13 +57,15 @@ def borrowBook(book_id,data):
     except Exception as err:
         return jsonify({"response":"something is wrong"}),400
     else:
+        if(member.debt>=500):
+                return jsonify({"response":"cannot issue",
+                "message":"clear your debt"}),400
         transaction=Transactions.selectBy(member_id=memb_id,book_id=book_id)
         if(list(transaction)!=[]):
             repeat_transaction=Transactions.selectBy(member_id=memb_id,book_id=book_id,status="issued")
             if(list(repeat_transaction)!=[]):
-                return jsonify({"response":"this book is already issued to this member cannot reissue the same book"}),200
-            if(member.debt>=500):
-                return jsonify({"response":"cannot issue the book since members dept is exceeding the limit first clear the debt"}),200
+                return jsonify({"response":"cannot issue",
+                "message":"cannot reissued the same book"}),400
             transaction=Transactions(book_id=book_id,member_id=memb_id)
             member.hasbooks=member.hasbooks+1
             member.totalbookissued=member.totalbookissued+1
