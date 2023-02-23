@@ -126,14 +126,16 @@ def getPopular(number):
         books=list(books)
         books.sort(key=lambda x:x.votes,reverse=True)
         popular=[]
-        for i in range (0,number):
+        num=[number,len(books)]
+        n=min(num)
+        for i in range (0,n):
             dict={}
             dict['id']=books[i].id
             dict['name']=books[i].name
             dict['author']=books[i].author
-            dict['votes']=books[i].votes
+            dict['votes']=books[i].votes    
             popular.append(dict)
-        return jsonify({"response":f"the top {number} popular books","books":popular}),200
+        return jsonify({"response":f"the top {n} popular books","books":popular}),200
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400

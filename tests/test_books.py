@@ -108,3 +108,7 @@ def test_get_book_by_author(client):
    res2=client.get(f'/book/searchbyauthor/demoauthor')
    assert res2.status_code==404
    
+def test_get_popular(client):
+    res1=client.get('/book/popular/2')
+    assert res1.status_code==200
+
