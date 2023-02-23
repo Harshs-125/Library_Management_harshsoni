@@ -57,6 +57,8 @@ def borrowBook(book_id,data):
     except Exception as err:
         return jsonify({"response":"something is wrong"}),400
     else:
+        if(book.available==0):
+            return jsonify({"response":"cannot issue","message":"this book is not available"}),400
         if(member.debt>=500):
                 return jsonify({"response":"cannot issue",
                 "message":"clear your debt"}),400

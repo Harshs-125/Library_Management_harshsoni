@@ -83,11 +83,16 @@ def test_borrow_book_and_return(client):
     assert res3.json['message']=="clear your debt"
     Members.delete(demomember_id)
     Books.delete(demobook_id)
-
-    
     res4=client.post(f'/book/borrow/{0}',json={"member_id":0})
     assert res4.status_code==404
     assert res4.json['response']=="member or book data not found"
+    demobook=Books(name="demobook",author="demoauthor",available=0,votes=20)
+    demomember=Members(name="demomember",email="demoemail@123")
+    res6=client.post(f'/book/borrow/{demobook.id}',json={"member_id":demomember.id})
+    assert res6.status_code==400
+    Members.delete(demomember.id)
+    Books.delete(demobook.id)
+
     
 def test_get_book_by_name(client):
     demoBook=Books(name="demobook",author="demoauthor",available=20,votes=20)
@@ -111,4 +116,5 @@ def test_get_book_by_author(client):
 def test_get_popular(client):
     res1=client.get('/book/popular/2')
     assert res1.status_code==200
+    
 
