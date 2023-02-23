@@ -96,7 +96,7 @@ def test_get_book_by_name(client):
     assert res1.status_code==200
     assert res1.json['name']==demoBook.name
     Books.delete(demoBook.id)
-    res2=client.get(f'/book/searchbyname/{demobook_name}')
+    res2=client.get(f'/book/searchbyname/demobook')
     assert res2.status_code==404
 
 def test_get_book_by_author(client):
@@ -105,5 +105,6 @@ def test_get_book_by_author(client):
    assert res1.status_code==200
    assert res1.json['books']!=[]
    Books.delete(demoBook.id)
-   res2=client.get(f'/book/searchbyauthor/{demoBook.author}')
+   res2=client.get(f'/book/searchbyauthor/demoauthor')
    assert res2.status_code==404
+   
