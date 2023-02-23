@@ -76,6 +76,8 @@ def deleteMember(member_id):
        return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
     else:
+        if(member.debt!=0 or member.hasbooks!=0):
+            return jsonify({"response":"failed","message":"cannot delete the member since record is not clear"}),400
         member.delete(member_id)
         return jsonify({"response":"successfully deleted the member"}),200
          

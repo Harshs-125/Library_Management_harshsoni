@@ -1,5 +1,5 @@
 import pytest
-from app import create_app
+from app import create_app,Members
 
 @pytest.fixture()
 def app():
@@ -24,3 +24,7 @@ def client(app):
 def runner(app):
     return app.test_cli_runner()
 
+@pytest.fixture()
+def create_member():
+    member=Members(name="demouser",email="demo@123")
+    return member
