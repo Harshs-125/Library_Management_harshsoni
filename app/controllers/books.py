@@ -81,6 +81,7 @@ def borrowBook(book_id,data):
                 transaction=Transactions(book_id=book_id,member_id=memb_id)
                 member.hasbooks=member.hasbooks+1
                 book.available=book.available-1
+                book.votes=book.votes+1
                 return jsonify({"response":"Book successfully issued",
                 "transaction-id":transaction.id,
                 "member-id":member.id,
@@ -112,6 +113,7 @@ def returnBookData(transaction_id,amount_paid):
         transaction.amount_paid=amount_paid
         transaction.status="returned"
         book.available=book.available+1 
+        member.hasbooks=member.hasbooks-1
         if(amount_to_paid-amount_paid>0):
             member.debt=member.debt + (amount_to_paid-amount_paid)
         return jsonify({"response":"Success",
@@ -152,7 +154,7 @@ def getBookByName(name):
             "author":book[0].author,
             "votes":book[0].votes,
             }),200
-        return jsonify({"message":"no book with this name"}),404
+        return jsonify({"response":"no book with this name"}),404
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
@@ -169,10 +171,10 @@ def getBookByAuthor(author):
                 dict['author']=b.author,
                 dict['votes']=b.votes
                 arr.append(dict)
-            return jsonify({"response":"Book with this name",
+            return jsonify({"response":"Book with by this author",
             "books":arr 
             }),200
-        return jsonify({"message":"no book with this name"}),404
+        return jsonify({"response":"no book with this author"}),404
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400

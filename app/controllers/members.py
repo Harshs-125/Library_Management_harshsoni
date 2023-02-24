@@ -72,9 +72,6 @@ def deleteMember(member_id):
         member=Members.get(member_id)
     except SQLObjectNotFound:
         return jsonify({"response":"object not found with this data"}),404
-    except Exception as err:
-       return jsonify({"response":"Something went wrong",
-        "error":str(err)}),400
     else:
         if(member.debt!=0 or member.hasbooks!=0):
             return jsonify({"response":"failed","message":"cannot delete the member since record is not clear"}),400
