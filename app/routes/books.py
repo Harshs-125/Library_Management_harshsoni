@@ -1,5 +1,5 @@
 from flask import Blueprint,request
-from ..controllers.books import addbooks,editBookData,borrowBook,returnBookData,getPopular,getBookByName,getBookByAuthor
+from ..controllers.books import addbooks,editBookData,borrowBook,returnBookData,getPopular,getBookByName,getBookByAuthor,getBookByID
 books=Blueprint('books',__name__)
 @books.route('/add',methods=['POST'])
 def add():
@@ -36,4 +36,9 @@ def getbyname(name):
 @books.route('/searchbyauthor/<string:author>',methods=['GET'])
 def getbyauthor(author):
     response=getBookByAuthor(author)
+    return response
+
+@books.route('/searchbyid/<int:id>',methods=['GET'])
+def getbyid(id):
+    response=getBookByID(id)
     return response

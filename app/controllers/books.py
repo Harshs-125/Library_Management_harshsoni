@@ -153,6 +153,7 @@ def getBookByName(name):
             "name":book[0].name,
             "author":book[0].author,
             "votes":book[0].votes,
+            "available":book[0].available
             }),200
         return jsonify({"response":"no book with this name"}),404
     except Exception as err:
@@ -170,6 +171,7 @@ def getBookByAuthor(author):
                 dict['name']=b.name,
                 dict['author']=b.author,
                 dict['votes']=b.votes
+                dict['available']=b.available
                 arr.append(dict)
             return jsonify({"response":"Book with by this author",
             "books":arr 
@@ -178,3 +180,17 @@ def getBookByAuthor(author):
     except Exception as err:
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
+
+def getBookByID(id):
+    try:
+        book=Books.get(id)
+    except SQLObjectNotFound:
+        return jsonify({"response":"Book Not Found"}),404
+    else:
+        return jsonify({
+            "response":f"Book with id={id}",
+            "book-name":book.name,
+            "book-author":book.author,
+            "book-votes":book.votes,
+            "book-available":book.available
+        })
