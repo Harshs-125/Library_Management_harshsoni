@@ -23,6 +23,20 @@ def addbooks(genre):
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
 
+def getbooks():
+    books=Books.select()
+    arr=[]
+    for book in books:
+        dict={}
+        dict['id']=book.id
+        dict['name']=book.name
+        dict['author']=book.author
+        dict['votes']=book.votes
+        dict['available']=book.available
+        arr.append(dict)
+    return jsonify({"response":"books:",
+                    "books":arr})
+
 def editBookData(id,data):
     try:
         book=Books.get(id)
@@ -80,6 +94,7 @@ def borrowBook(book_id,data):
         else:
                 transaction=Transactions(book_id=book_id,member_id=memb_id)
                 member.hasbooks=member.hasbooks+1
+                member.totalbookissued=member.totalbookissued+1
                 book.available=book.available-1
                 book.votes=book.votes+1
                 return jsonify({"response":"Book successfully issued",

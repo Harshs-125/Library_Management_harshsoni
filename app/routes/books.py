@@ -1,5 +1,5 @@
 from flask import Blueprint,request
-from ..controllers.books import addbooks,editBookData,borrowBook,returnBookData,getPopular,getBookByName,getBookByAuthor,getBookByID
+from ..controllers.books import addbooks,editBookData,borrowBook,returnBookData,getPopular,getBookByName,getBookByAuthor,getBookByID,getbooks
 books=Blueprint('books',__name__)
 @books.route('/add',methods=['POST'])
 def add():
@@ -7,6 +7,10 @@ def add():
     response=addbooks(request_data['genre'])
     return response
 
+@books.route('/get',methods=['GET'])
+def get():
+    response=getbooks()
+    return response
 @books.route('/edit-book-data/<int:id>',methods=['PATCH'])
 def edit(id):
     request_data=request.json
@@ -28,14 +32,14 @@ def returnBook(transaction_id):
 def popularBook(number):
     response=getPopular(number)
     return response
-@books.route('/searchbyname/<string:name>',methods=['GET'])
-def getbyname(name):
-    response=getBookByName(name)
+@books.route('/searchbyname',methods=['GET'])
+def getbyname():
+    response=getBookByName(request.json['name'])
     return response
 
-@books.route('/searchbyauthor/<string:author>',methods=['GET'])
-def getbyauthor(author):
-    response=getBookByAuthor(author)
+@books.route('/searchbyauthor',methods=['GET'])
+def getbyauthor():
+    response=getBookByAuthor(request.json['author'])
     return response
 
 @books.route('/searchbyid/<int:id>',methods=['GET'])

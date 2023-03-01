@@ -58,11 +58,11 @@ def test_endtoend_positive(client):
     res8=client.get('/member/highestpayingcustomer/2')
     assert res8.status_code==200
 
-    res9=client.get(f'/book/searchbyname/{book.name}')
+    res9=client.get(f'/book/searchbyname',json={"name":"demobook"})
     assert res9.status_code==200
     assert res9.json['name']==book.name
 
-    res10=client.get(f'/book/searchbyauthor/{book.author}')
+    res10=client.get(f'/book/searchbyauthor',json={"author":"demoauthor"})
     assert res10.status_code==200
     assert res10.json['books']!=[]
 
@@ -98,11 +98,11 @@ def test_endtoend_negative(client):
     res7=client.post(f'/member/paydebt/{0}',json={"amount":0})
     assert res7.status_code==404
 
-    res9=client.get(f'/book/searchbyname/{"hafhx"}')
+    res9=client.get(f'/book/searchbyname',json={"name":"bsss"})
     assert res9.status_code==404
     assert res9.json['response']=="no book with this name"
 
-    res10=client.get(f'/book/searchbyauthor/{"harhs"}')
+    res10=client.get(f'/book/searchbyauthor',json={"author":"demoauthor"})
     assert res10.status_code==404
     
     member=Members(name="demo",email="demo@123")
