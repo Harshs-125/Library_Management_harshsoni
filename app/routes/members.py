@@ -1,5 +1,5 @@
 from flask import Blueprint,request
-from ..controllers.members import addMember,history,payDebt,highestPayingCustomer,deleteMember
+from ..controllers.members import addMember,history,payDebt,highestPayingCustomer,deleteMember,updateMember
 members=Blueprint('members',__name__)
 @members.route('/add',methods=['POST'])
 def add():
@@ -26,4 +26,10 @@ def highestpaying(number):
 @members.route('/delete/<int:member_id>',methods=['DELETE'])
 def deletemember(member_id):
     response=deleteMember(member_id)
+    return response
+
+@members.route('/update/<int:member_id>',methods=['PATCH'])
+def updatemember(member_id):
+    request_data=request.json
+    response=updateMember(member_id,request_data)
     return response

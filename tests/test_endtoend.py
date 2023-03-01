@@ -1,6 +1,4 @@
 import pytest
-import json
-import requests
 from app import Books,Members,Transactions
 
 def test_endtoend_positive(client):
@@ -71,17 +69,14 @@ def test_endtoend_positive(client):
     res11=client.get('/book/popular/2')
     assert res11.status_code==200
     
-    print(member)
     res12=client.delete(f'/member/delete/{member_id}')
     assert res12.status_code==200
 
     Books.delete(book_id)
     Transactions.delete(transaction_id)
 
-
 def test_endtoend_negative(client):
     
-
     res2=client.post(f'/book/borrow/{0}',json={"member_id":0})
     assert res2.status_code==404
     assert res2.json['response']=="member or book data not found"
@@ -117,12 +112,3 @@ def test_endtoend_negative(client):
     assert res11.status_code==400
     assert res11.json['message']=="cannot delete the member since record is not clear"
     member.delete(member.id)
-
-
-
-    
-
-   
-    
-
-

@@ -1,6 +1,4 @@
 import pytest
-import json
-import requests
 from app import Books,Members,Transactions
 
 @pytest.mark.skip
@@ -21,7 +19,6 @@ def test_add_books(client):
         "genre":"dededededd"
     })
     assert res4.status_code==400
-
 
 def test_edit_book(client):
     demoBook=Books(name="demobook",author="demoauthor",available=20,votes=20)
@@ -44,7 +41,7 @@ def test_edit_book(client):
     res3=client.patch(f'/book/edit-book-data/{demoBook_id}',json=data1)
     assert res3.status_code==404
     assert res3.json['response']=="data not found"
-# @pytest.mark.skip
+
 def test_borrow_book_and_return(client):
     demoBook=Books(name="demobook",author="demoauthor",available=20,votes=20)
     demomember=Members(name="demomember",email="demoemail@123")
@@ -92,8 +89,7 @@ def test_borrow_book_and_return(client):
     assert res6.status_code==400
     Members.delete(demomember.id)
     Books.delete(demobook.id)
-
-    
+ 
 def test_get_book_by_name(client):
     demoBook=Books(name="demobook",author="demoauthor",available=20,votes=20)
     demobook_name=demoBook.name
@@ -116,5 +112,3 @@ def test_get_book_by_author(client):
 def test_get_popular(client):
     res1=client.get('/book/popular/2')
     assert res1.status_code==200
-    
-

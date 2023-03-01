@@ -22,6 +22,3 @@ def viewrecord(transaction_id):
             "member_id":transaction.member_id,
             "book-id":transaction.book_id,
             "amount-to-pay":amount_to_pay}),200
-    
-
-

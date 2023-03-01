@@ -1,6 +1,4 @@
-
 import pytest
-import json
 from app import Transactions
 
 def test_viewrecord(client):

@@ -78,3 +78,19 @@ def deleteMember(member_id):
         member.delete(member_id)
         return jsonify({"response":"successfully deleted the member"}),200
          
+def updateMember(member_id,data):
+    try:
+        member=Members.get(member_id)
+    except SQLObjectNotFound:
+        return jsonify({"response":"object not found with this data"}),404
+    else:
+        if(data['key']=="name"):
+            member.name=data['value']
+        if(data['key']=="email"):
+            member.email==data['value']
+        return jsonify({"response":"member details successfully updated",
+                        "member":{
+                        "id":member.id,
+                        "name":member.name,
+                        "email":member.email,
+                        }}),200

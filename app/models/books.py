@@ -10,6 +10,3 @@ class Books(SQLObject):
 
     def get_dict(self):
         return {'id':self.id,'name':self.name,'votes':self.votes,'available':self.available}
-
-
-
