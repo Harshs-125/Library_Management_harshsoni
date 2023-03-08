@@ -32,12 +32,12 @@ def returnBook(transaction_id):
 def popularBook(number):
     response=getPopular(number)
     return response
-@books.route('/searchbyname',methods=['GET'])
+@books.route('/searchbyname',methods=['POST'])
 def getbyname():
     response=getBookByName(request.json['name'])
     return response
 
-@books.route('/searchbyauthor',methods=['GET'])
+@books.route('/searchbyauthor',methods=['POST'])
 def getbyauthor():
     response=getBookByAuthor(request.json['author'])
     return response

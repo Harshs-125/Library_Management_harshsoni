@@ -34,7 +34,7 @@ def history(id):
         "transactions":arr
         }),200
 
-def payDebt(id,amount):
+def payDebt(id):
     try:
         member=Members.get(id)
     except SQLObjectNotFound:
@@ -43,8 +43,8 @@ def payDebt(id,amount):
         return jsonify({"response":"Something went wrong",
         "error":str(err)}),400
     else:    
-        member.debt=member.debt-amount
-        return jsonify({"response":"amount registered","amount_paid":amount,"debt-left":member.debt}),200
+        member.debt=0
+        return jsonify({"response":"debt cleared"}),200
 
 def highestPayingCustomer(number):
     try:

@@ -14,8 +14,7 @@ def view(member_id):
 
 @members.route('/paydebt/<int:member_id>',methods=['POST'])
 def paydebt(member_id):
-    request_data=request.json
-    response=payDebt(member_id,request_data['amount'])
+    response=payDebt(member_id)
     return response
 
 @members.route('/highestpayingcustomer/<int:number>',methods=['GET'])
