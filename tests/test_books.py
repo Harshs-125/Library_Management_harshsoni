@@ -93,20 +93,20 @@ def test_borrow_book_and_return(client):
 def test_get_book_by_name(client):
     demoBook=Books(name="demobook",author="demoauthor",available=20,votes=20)
     demobook_name=demoBook.name
-    res1=client.get(f'/book/searchbyname',json={"name":"demobook"})
+    res1=client.post(f'/book/searchbyname',json={"name":"demobook"})
     assert res1.status_code==200
     assert res1.json['name']==demoBook.name
     Books.delete(demoBook.id)
-    res2=client.get(f'/book/searchbyname',json={"name":"demobook"})
+    res2=client.post(f'/book/searchbyname',json={"name":"demobook"})
     assert res2.status_code==404
 
 def test_get_book_by_author(client):
    demoBook=Books(name="demobook",author="demoauthor",available=20,votes=20)
-   res1=client.get(f'/book/searchbyauthor',json={"author":"demoauthor"})
+   res1=client.post(f'/book/searchbyauthor',json={"author":"demoauthor"})
    assert res1.status_code==200
    assert res1.json['books']!=[]
    Books.delete(demoBook.id)
-   res2=client.get(f'/book/searchbyauthor',json={"author":"demoauthor"})
+   res2=client.post(f'/book/searchbyauthor',json={"author":"demoauthor"})
    assert res2.status_code==404
    
 def test_get_popular(client):

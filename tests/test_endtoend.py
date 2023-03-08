@@ -51,18 +51,18 @@ def test_endtoend_positive(client):
     assert res6.json['name']==member.name
     assert res6.json['transactions']!=None
 
-    res7=client.post(f'/member/paydebt/{member_id}',json={"amount":member.debt})
+    res7=client.post(f'/member/paydebt/{member_id}')
     assert res7.status_code==200
     assert member.debt==0
 
     res8=client.get('/member/highestpayingcustomer/2')
     assert res8.status_code==200
 
-    res9=client.get(f'/book/searchbyname',json={"name":"demobook"})
+    res9=client.post(f'/book/searchbyname',json={"name":"demobook"})
     assert res9.status_code==200
     assert res9.json['name']==book.name
 
-    res10=client.get(f'/book/searchbyauthor',json={"author":"demoauthor"})
+    res10=client.post(f'/book/searchbyauthor',json={"author":"demoauthor"})
     assert res10.status_code==200
     assert res10.json['books']!=[]
 
@@ -95,14 +95,14 @@ def test_endtoend_negative(client):
     res6=client.get(f'/member/history/{0}')
     assert res6.status_code==404
 
-    res7=client.post(f'/member/paydebt/{0}',json={"amount":0})
+    res7=client.post(f'/member/paydebt/{0}')
     assert res7.status_code==404
 
-    res9=client.get(f'/book/searchbyname',json={"name":"bsss"})
+    res9=client.post(f'/book/searchbyname',json={"name":"bsss"})
     assert res9.status_code==404
     assert res9.json['response']=="no book with this name"
 
-    res10=client.get(f'/book/searchbyauthor',json={"author":"demoauthor"})
+    res10=client.post(f'/book/searchbyauthor',json={"author":"demoauthor"})
     assert res10.status_code==404
     
     member=Members(name="demo",email="demo@123")

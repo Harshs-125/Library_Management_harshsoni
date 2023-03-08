@@ -9,12 +9,18 @@ from .models.books import Books
 from .models.members import Members
 from .models.transactions import Transactions
 from flask_cors import CORS
-def create_app():
+def create_app(mode):
     app=Flask(__name__)
-    db_filename = os.path.abspath('library.sqlite')
-    connection_string = 'sqlite:' + db_filename
-    connection = connectionForURI(connection_string)
-    sqlhub.processConnection = connection
+    if(mode=="development"):
+        db_filename = os.path.abspath('library.sqlite')
+        connection_string = 'sqlite:' + db_filename
+        connection = connectionForURI(connection_string)
+        sqlhub.processConnection = connection
+    elif(mode=="testing"):
+        db_filename = os.path.abspath('testing.sqlite')
+        connection_string = 'sqlite:' + db_filename
+        connection = connectionForURI(connection_string)
+        sqlhub.processConnection = connection
     CORS(app)
     Books.createTable(ifNotExists=True)
     Members.createTable(ifNotExists=True)

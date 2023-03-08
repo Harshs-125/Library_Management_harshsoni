@@ -3,17 +3,11 @@ from app import create_app,Members
 
 @pytest.fixture()
 def app():
-    app = create_app()
+    app = create_app("testing")
     app.config.update({
         "TESTING": True,
     })
-
-    # other setup can go here
-
     return app
-
-    # clean up / reset resources here
-
 
 @pytest.fixture()
 def client(app):

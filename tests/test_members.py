@@ -28,9 +28,8 @@ def test_member_transaction_history(client,create_member):
 
 def test_paydebt(client,create_member):
     demomember=create_member
-    demomember.debt=100
     member_id=demomember.id
-    res1=client.post(f'/member/paydebt/{member_id}',json={"amount":50})
+    res1=client.post(f'/member/paydebt/{member_id}')
     assert res1.status_code==200
     demomember.delete(member_id)
 
